@@ -1,6 +1,14 @@
+using Crud.Domain;
 using Crud.Grpc.Services;
+using Crud.Repository;
+using Crud.Repository.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connetctionString = builder.Configuration.GetConnectionString("ConnectionStrings");
+builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(connetctionString));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Add services to the container.
 builder.Services.AddGrpc();
