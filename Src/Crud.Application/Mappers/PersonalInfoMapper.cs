@@ -12,6 +12,7 @@ namespace Crud.Application.Mappers
         
         public static PersonalInfoDto MapTo(this PersonalInfo model)
         {
+            if (model is null) return default;
             return new PersonalInfoDto
             {
                 Id = model.Id,

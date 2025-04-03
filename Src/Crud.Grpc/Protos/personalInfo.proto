@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option csharp_namespace = "Crud.Grpc";
+
+package personalInfo;
+
+
+service PersonalInfo {
+  rpc Create (PersonalInfoCreateRequest) returns (PersonalInfoCreateReply);
+  rpc Update (PersonalInfoUpdateRequest) returns (PersonalInfoUpdateReply);
+  rpc Delete (PersonalInfoDeleteRequest) returns (PersonalInfoDeleteReply);
+  rpc Get (PersonalInfoGetRequest) returns (PersonalInfoGetReply);
+}
+
+
+message PersonalInfoCreateRequest {
+  string name = 1;
+  string lastName = 2;
+  string nationalId = 3;
+  string birthDate = 4;
+}
+
+message PersonalInfoCreateReply {
+  string message = 1;
+}
+
+message PersonalInfoUpdateRequest {
+  int64 id = 1;
+  string name = 2;
+  string lastName = 3;
+  string nationalId = 4;
+  string birthDate = 5;
+}
+
+message PersonalInfoUpdateReply {
+  string message = 1;
+}
+
+message PersonalInfoDeleteRequest {
+  int64 id = 1;
+}
+
+message PersonalInfoDeleteReply {
+  string message = 1;
+}
+
+message PersonalInfoGetRequest {
+  int64 id = 1;
+}
+
+message PersonalInfoGetReply {
+  int64 id = 1;
+  string name = 2;
+  string lastName = 3;
+  string nationalId = 4;
+  string birthDate = 5;
+}
