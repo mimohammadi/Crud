@@ -49,7 +49,11 @@ message PersonalInfoGetRequest {
 }
 
 message PersonalInfoGetReply {
-  int64 id = 1;
+  PersonalInfoMessage personalInfo = 1;
+}
+
+message PersonalInfoMessage{
+	int64 id = 1;
   string name = 2;
   string lastName = 3;
   string nationalId = 4;

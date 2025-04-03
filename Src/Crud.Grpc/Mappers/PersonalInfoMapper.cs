@@ -32,11 +32,14 @@ namespace Crud.Grpc.Mappers
             if (dto is null) return default;
             return new PersonalInfoGetReply
             {
-                Id = dto.Id,
-                Name = dto.Name,
-                LastName = dto.LastName,
-                NationalId = dto.NationalId,
-                BirthDate = dto.BirthDate.ToString(),
+                PersonalInfo = new PersonalInfoMessage
+                {
+                    Id = dto.Id,
+                    Name = dto.Name,
+                    LastName = dto.LastName,
+                    NationalId = dto.NationalId,
+                    BirthDate = dto.BirthDate.ToString(),
+                }
             };
         }
     }

@@ -1,6 +1,10 @@
 ﻿using Crud.Application.Interfaces;
 using Crud.Grpc.Mappers;
 using Grpc.Core;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Runtime.CompilerServices;
+using Google.Rpc;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Crud.Grpc.Services
 {
@@ -15,10 +19,12 @@ namespace Crud.Grpc.Services
 
         public override async Task<PersonalInfoCreateReply> Create(PersonalInfoCreateRequest request, ServerCallContext context)
         {
+            ArgumentNotNullOrEmpty(request.Name);
+            
             await _personalInfoService.AddPersonalInfo(request.MapTo());
             return new PersonalInfoCreateReply
             {
-                Message = "200"
+                Message = "ثبت شد"
             };
         }
 
@@ -27,7 +33,7 @@ namespace Crud.Grpc.Services
             await _personalInfoService.UpdatePersonalInfo(request.MapTo());
             return new PersonalInfoUpdateReply
             {
-                Message = "200"
+                Message = "ویرایش شد"
             };
         }
 
@@ -36,7 +42,7 @@ namespace Crud.Grpc.Services
             await _personalInfoService.DeletePersonalInfo(request.Id);
             return new PersonalInfoDeleteReply
             {
-                Message = "200"
+                Message = "حذف شد"
             };
         }
 
@@ -44,6 +50,34 @@ namespace Crud.Grpc.Services
         {
             var personalInfo = await _personalInfoService.Get(request.Id);
             return personalInfo.MapTo();
+        }
+
+        /// <summary>
+        /// one way to handle error
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="paramName"></param>
+        public static void ArgumentNotNullOrEmpty(string value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                var status = new Google.Rpc.Status
+                {
+                    Code = (int)Code.InvalidArgument,
+                    Message = "Bad request",
+                    Details =
+                {
+                    Any.Pack(new Google.Rpc.BadRequest
+                    {
+                        FieldViolations =
+                        {
+                            new Google.Rpc.BadRequest.Types.FieldViolation { Field = paramName, Description = "Value is null or empty" }
+                        }
+                    })
+                }
+                };
+                throw status.ToRpcException();
+            }
         }
     }
 }
